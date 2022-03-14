@@ -9,7 +9,7 @@ def index():
     return render_template("index.html")
 
 #localhost/signup로 접속했을때
-@app.route("/signup/", methods=["GET"])
+@app.route("/signup/", methods=["GET"]) ### get은 데이터를 url에 실어서 보낸다
 def signup():
     return render_template("signup.html")
 
@@ -50,9 +50,50 @@ def login():
     result = _db._executeAll(sql, _values)
 
     if result:
-        return "Login"
+        return render_template("welcome.html", name = result[0]["name"], id = result[0]["ID"])
     else :
-        return "Fail"
+        return redirect(url_for('index'))
+
+@app.route("/update", methods = ["GET"])
+def update():
+    id = request.args["_id"]
+    sql = """
+            SELECT * FROM user_info WHERE ID = %s
+            """
+    values = [id]
+    _db = mod_sql.Database()
+    result = _db._executeAll(sql, values)
+    return render_template("update.html", info = result[0])
+
+@app.route("/update", methods=["POST"])
+def update_2():
+    
+    _id = request.form["_id"]
+    _password = request.form["_password"]
+    _name = request.form["_name"]
+    _phone = request.form["_phone"]
+    _gender = request.form["_gender"]
+    _age = request.form["_age"]
+    _ads = request.form["_ads"]
+    
+    sql = """
+            UPDATE user_info SET 
+            
+            password = %s,
+            name = %s,
+            phone = %s,
+            gender = %s,
+            age = %s,
+            ads = %s
+            WHERE ID = %s
+    """
+    _values = [_password, _name, _phone, _gender, _age, _ads, _id]
+    _db = mod_sql.Database()
+    _db._execute(sql, _values)
+    _db._commit()
+
+    return redirect(url_for('index'))
+
 
 
 app.run(port="80")
