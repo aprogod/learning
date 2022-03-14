@@ -94,6 +94,39 @@ def update_2():
 
     return redirect(url_for('index'))
 
+@app.route("/delete", methods = ["GET"])
+def delete():
+    id = request.args["_id"]
+    sql = """
+            SELECT * FROM user_info WHERE ID = %s
+            """
+    values = [id]
+    _db = mod_sql.Database()
+    result = _db._executeAll(sql, values)
+    return render_template("delete.html", info = result[0])
+
+@app.route("/delete", methods=["POST"])
+def delete_2():
+    
+    _id = request.form["_id"]
+    _password = request.form["_password"]
+    _name = request.form["_name"]
+    _phone = request.form["_phone"]
+    _gender = request.form["_gender"]
+    _age = request.form["_age"]
+    _ads = request.form["_ads"]
+    
+    sql = """
+            DELETE FROM user_info
+            WHERE 
+            ID = %s AND password = %s
+        """
+    _values = [_id, _password]
+    _db = mod_sql.Database()
+    _db._execute(sql, _values)
+    _db._commit()
+
+    return redirect(url_for('index'))
 
 
 app.run(port="80")
