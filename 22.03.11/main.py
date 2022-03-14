@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, url_for
-import pymysql
+from modules import mod_sql
 
 app = Flask(__name__)
 
@@ -16,14 +16,7 @@ def signup():
 @app.route("/signup", methods=["POST"])
 def signup_2():
     
-    _db = pymysql.connect(
-    user = "root",
-    passwd = "1234",
-    host = "localhost",
-    db = "ubion"
-    )
 
-    cursor = _db.cursor(pymysql.cursors.DictCursor)
 
     _id = request.form["_id"]
     _password = request.form["_password"]
@@ -37,9 +30,9 @@ def signup_2():
             INSERT INTO user_info VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     _values = [_id, _password, _name, _phone, _ads, _gender, _age, _regitdate]
-    cursor.execute(sql, _values)
-    _db.commit()
-    _db.close()
+    _db = mod_sql.Database()
+    _db._execute(sql, _values)
+    _db._commit()
 
     return redirect(url_for('index'))
 
@@ -48,23 +41,13 @@ def login():
 
     _id = request.form["_id"]
     _password = request.form["_password"]
-    
-    _db = pymysql.connect(
-    user = "root",
-    passwd = "1234",
-    host = "localhost",
-    db = "ubion"
-    )
-
-    cursor = _db.cursor(pymysql.cursors.DictCursor)
 
     sql = """
             SELECT * FROM user_info WHERE ID = %s AND password = %s
           """
     _values = [_id, _password]
-    cursor.execute(sql, _values)
-    result = cursor.fetchall()
-    _db.close()
+    _db = mod_sql.Database()
+    result = _db._executeAll(sql, _values)
 
     if result:
         return "Login"
