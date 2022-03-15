@@ -1,12 +1,14 @@
+from distutils.log import info
 from flask import Flask, redirect, render_template, request, url_for
 from modules import mod_sql
 
 app = Flask(__name__)
 
-#localhost로 접속했을때
+# localhost로 접속했을때
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html") ### render_template >> html파일을 보내주겠다.
 
 #localhost/signup로 접속했을때
 @app.route("/signup/", methods=["GET"]) ### get은 데이터를 url에 실어서 보낸다
@@ -107,27 +109,60 @@ def delete():
 
 @app.route("/delete", methods=["POST"])
 def delete_2():
-    
+
     _id = request.form["_id"]
     _password = request.form["_password"]
-    _name = request.form["_name"]
-    _phone = request.form["_phone"]
-    _gender = request.form["_gender"]
-    _age = request.form["_age"]
-    _ads = request.form["_ads"]
-    
-    sql = """
-            DELETE FROM user_info
-            WHERE 
-            ID = %s AND password = %s
-        """
-    _values = [_id, _password]
+    # _name = request.form["_name"]
+    # _phone = request.form["_phone"]
+    # _gender = request.form["_gender"]
+    # _age = request.form["_age"]
+    # _ads = request.form["_ads"]
+
     _db = mod_sql.Database()
-    _db._execute(sql, _values)
-    _db._commit()
 
-    return redirect(url_for('index'))
+    s_sql = """
+            SELECT * FROM user_info 
+            WHERE 
+            ID = %s and password = %s
+            """
 
+    d_sql = """
+                DELETE FROM user_info
+                WHERE 
+                ID = %s AND password = %s
+            """
+    
+    _values = [_id, _password]
+    result = _db._executeAll(s_sql,_values)
+
+    if result:
+        _db._execute(d_sql, _values)
+        _db._commit()
+        return redirect(url_for('index'))
+    else:
+        return "잘못된 비밀번호 입니다."
+
+@app.route("/view", methods=["GET"])
+def _view():
+
+    sql = """
+            SELECT user_info.name, user_info.ads, user_info.age, ads_info.register_count
+            FROM user_info LEFT JOIN ads_info
+            ON user_info.ads = ads_info.ads
+          """
+    
+    _db = mod_sql.Database()
+    result = _db._executeAll(sql)
+    key = list(result[0].keys())
+    #print(key)
+
+    return render_template("view.html", info = result, keys = key)
+
+
+    # -> sql문 -> user_info left join ads_info 
+    # 조건 user_info ads = ads_info ads
+    # columns값들 -> user_info : name, ads, age/ ads_info : register_count 쿼리문 작성
+    # view.html을 render 쿼리문의 결과값을 데이터로 같이 보내주는 코드를 작성
 
 app.run(port="80")
 

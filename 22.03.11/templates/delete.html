@@ -40,35 +40,15 @@
 <main class="form-signin">
   <form action="/delete" method="post">
     <img class="mb-4" src="{{url_for('static', filename='img/bootstrap-logo.svg')}}" alt="" width="72" height="57">
-    <h1 class="h3 mb-3 fw-normal">회원 가입</h1>
+    <h1 class="h3 mb-3 fw-normal">회원 탈퇴</h1>
 
     <div class="form-floating">
-      <input type="text" class="form-control" id="floatingInput" name="_id" value = "{{info['ID']}}" >
+      <input type="text" class="form-control" id="floatingInput" name="_id" value = "{{info['ID']}}" readonly>
       <label for="floatingInput">ID</label>
     </div>
     <div class="form-floating">
       <input type="password" class="form-control" id="floatingPassword" name="_password" value = "{{info['password']}}">
       <label for="floatingPassword">Password</label>
-    </div>
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingName" name="_name" value = "{{info['name']}}">
-      <label for="floatingName">이름</label>
-    </div>
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingPhone" name="_phone" value = "{{info['phone']}}">
-      <label for="floatingPhone">전화번호</label>
-    </div>
-    <div class="form-floating">
-      <input type="text" class="form-control" id="floatingads" name="_ads" value = "{{info['ads']}}">
-      <label for="floatingads">주소</label>
-    </div>
-    <div class="form-floating">
-      <input type="number" class="form-control" id="floatingGender" name="_gender" value = "{{info['gender']}}">
-      <label for="floatingGender">성별</label>
-    </div>
-    <div class="form-floating">
-      <input type="number" class="form-control" id="floatingAge" name="_age" value = "{{info['age']}}">
-      <label for="floatingAge">나이</label>
     </div>
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">회원 탈퇴</button>
