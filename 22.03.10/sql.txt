@@ -1,0 +1,77 @@
+1. show databases:
+2. DROP DATABASE test:
+3. show databases:
+4. CREATE DATABASE ubion:
+5. use ubion
+6.
+CREATE TABLE user_info (
+ID varchar(32) primary key,
+password varchar(32) NOT NULL,
+name varchar(32) NOT NULL,
+phone varchar(32) NOT NULL,
+ads varchar(64),
+gender int NOT NULL,
+age int NOT NULL,
+regit_date varchar(32) NOT NULL);
+
+7. desc user_info
+
+8. ALTER TABLE user_info MODIFY COLUMN ads varchar(64) NOT NULL;
+9. ALTER TABLE user_info ADD friend int;
+10. desc user_info
+11. ALTER TABLE user_info DROP friend;
+12. desc user_info;
+
+13.
+INSERT INTO user_info VALUES (
+"test",
+"1234",
+"고길동",
+"01012345678",
+"서울시 강북구 쌍문동",
+1,
+45,
+"20220310");
+
+14.SELECT *FROM user_info
+
+15.
+INSERT INTO user_info(ID, password, name, phone, ads, gender, age, regit_date)
+VALUES("test2", "5678", "둘리", "010987654321", "고길동 집", 1, 10, "20220310"),
+("test3", "0123", "마이콜", "01034561234", "고길동 옆집", 1, 28, "20220310");
+
+16.SELECT *FROM user_info
+
+17. 
+CREATE TABLE ads_info (
+ads varchar (64) primary key,
+register_count int not null,
+dol int not null,
+contract_type int not null);
+
+18.
+insert into ads_info values(
+"서울시 강북구 쌍문동",
+5,
+48,
+0);
+
+19.
+insert into ads_info values (
+"북극 어딘가",
+2,
+1200,
+0);
+
+20. select *from ads_info;
+
+21.
+INSERT INTO user_info(ID, password, name, phone, ads, gender, age, regit_date)
+VALUES("test4", "8888", "둘리엄마", "01033334444", "북극 어딘가", 2, 100, "20220310");
+
+22.
+select user_info.ID, user_info.name, user_info.ads, ads_info.register_count, ads_info.dol,
+ads_info.contract_type from user_info left join ads_info on user_info.ads = ads_info.ads;
+
+23.
+insert into ads_info values ("유비온", 20, 60, 2);
